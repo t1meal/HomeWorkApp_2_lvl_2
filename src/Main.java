@@ -1,19 +1,22 @@
 import java.util.Arrays;
+import java.util.Random;
 
 public class Main {
     public static void main(String[] args) {
-        // правильный массив
-        String correctArr [][] = {
-                {"1","2","3","4"},
-                {"5","6","7","8"},
-                {"9","10","11","12"},
-                {"13","14","15","16"}};
+        Random random1 = new Random();
+
+        String correctArr1 [][] = new String[4][4];
+        for (int i = 0; i < 4; i++){
+            for (int j = 0; j < 4; j++){
+                correctArr1[i][j] = String.valueOf(random1.nextInt(50));
+            }
+        }
         // массив с неверным размером (для проверки)
         String wrongSizeArr [][] = {
-                {"1","2","4",},
-                {"5","6","7",},
-                {"9","10","11",},
-                {"12","13","14",}};
+                {"1","2","4","5",},
+                {"5","6","7","13","15","17"},
+                {"9","10","11","12"},
+                {"12","13","14","15"}};
         // массив с невеным типом данных (для проверки)
         String wrongDataArr [][] = {
                 {"1","2","3","4"},
@@ -23,9 +26,7 @@ public class Main {
 
         // блок try/catch для перехвата исключения либо Size,Data или общее исключение от класса Exception
         try {
-            entArray(correctArr, correctArr);
-//            entArray(wrongSizeArr, correctArr);
-//            entArray(wrongDataArr, correctArr);
+            entArray(correctArr1, correctArr1);
         } catch (MyArrayDataException c){
             System.out.println("Ошибка данных массива!");
             c.printStackTrace();
@@ -39,10 +40,15 @@ public class Main {
     }
     public static void entArray (String [][] mainArr, String [][] checkArr) throws MyArraySizeException, MyArrayDataException {
 
-        // проверка на размер массива и выброс исключения MyArraySizeException, если массив не подходит
-        if (mainArr.length != checkArr.length || mainArr[0].length != checkArr[0].length){
-            throw new MyArraySizeException("Длинна подаваемого массива - " + mainArr.length + "х" + mainArr[0].length);
+        if (mainArr.length != checkArr.length){
+            throw new MyArraySizeException("Количество строк подаваемого массива - " + mainArr.length);
         }
+        for (int i = 0; i < checkArr.length; i++){
+            if (mainArr[i].length != 4) throw new MyArraySizeException("Длинна строки №" + (i+1) + " подаваемого массива - "  + mainArr[i].length);
+        }
+
+        // проверка на размер массива и выброс исключения MyArraySizeException, если массив не подходит
+
         // агрегатор чисел (счетчик)
         int sum = 0;
         // цикл который переводит из Str в int и записывает в переменную счетчик
@@ -51,7 +57,7 @@ public class Main {
                 try {
                     sum += Integer.parseInt(mainArr[i][j]);
                 } catch (Exception e){
-                    throw new MyArrayDataException(i, j);
+                    throw new MyArrayDataException((i+1),(j+1));
                 }
             }
         }
